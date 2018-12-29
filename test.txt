@@ -1,0 +1,209 @@
+// me muestra el listado de base de datos
+show dbs 
+
+//Para crear una base de datos
+use databasename
+
+//para comprobar en que base de datos se encuentra 
+db
+
+//Creando usuario y sus privilegios
+db.createUser({
+    user:'Jose',
+    pwd:'123',
+    roles:['readWrite','dbAdmin']
+});
+
+//Creando una coleccion
+db.clientes.insert({
+    firstName:'Isaac',
+    lastName:'Asimov'
+});
+
+//Listando los datos de la db
+db.clientes.find();
+
+//insertando multiples usuarios como Arrays
+db.clientes.insert([
+    { firstName:'Elena', lastName:'Soraya'},
+    { firstName:'Cristopher', lastName:'Armas'}>
+]);
+
+//buscar un cliente
+db.clientes.find({firstName:'Isaac'});
+
+//Actualizando un dato
+db.clientes.update(
+    {lastName:'Soraya'},
+    {
+        firstName:'Elena',
+        lasName:'Soraya',
+        gender:'Female'
+    }
+);
+
+//Darle un formato a la vista de la busqeda 
+//para que sea mas legible
+db.clientes.find().pretty()
+
+//buscando por el ObjectId
+db.clientes.find({_id : ObjectId("5c27a036b90957ecbfb3c753")})
+
+//Actualizando (Se debe actualizar todos los datos)
+db.clientes.update(
+ {_id: ObjectId("5c27a036b90957ecbfb3c753")},
+ {
+ firstName:'Isaac',
+ lastName:'Delahuye',
+ gender:'male'
+ }
+);
+
+//Añadiendo una propiedad de un elemento sin tener que insertar 
+//todos los datos
+ db.clientes.update(
+ {_id: ObjectId("5c27a036b90957ecbfb3c753")},
+ {
+ $set:{age:45}
+ }
+ );
+
+//Incrementando valores
+ db.clientes.update(
+{_id: ObjectId("5c27a036b90957ecbfb3c753")},
+{
+    $inc:{age:5}
+}
+ );
+
+//Quitando propiedades
+db.clientes.update(
+{_id: ObjectId("5c27a036b90957ecbfb3c753")},
+{
+    $unset:{age:1}
+}
+);
+
+//Insertando si es que no existe
+
+//Este si existe asi que solo lo actualiza
+db.clientes.update(
+    {firstName:'Elena'},
+    {
+        firstName:'Elena',
+        lasName:'Delahuye'
+    }
+    ,{upsert:true}
+);
+
+//Este NO existe
+db.clientes.update(
+    {firstName:'Hardi'},
+    {
+        firstName:'Elena',
+        lasName:'Manrique'
+    }
+    ,{upsert:true}
+);
+
+//Actualizando nombre de las propiedades
+db.clientes.update(
+    {firstName:"Cristopher"},
+    {
+        $rename:{"firstName":"primerNombre"}
+    }
+);
+
+//Eliminando 
+db.clientes.remove(
+    {primerNombre:'Cristopher'}
+);
+
+//Eliminando solo un elemento si es que hay 
+//elemenos con valores parecidos
+db.clientes.remove(
+    {firstName:'Hardi'},
+    {justOne:true}
+);
+
+//Busqueda de datos con 'or'
+
+db.clientes.find(
+    $or:[{firstName:'Jose'},{firstName:'Hardi'}]
+);
+
+//
+db.clientes.find(
+ {gender:'male'}
+ );
+
+//Insertando datos para prueba
+ db.clientes.insert(
+    [
+        {name:'Alex',age:20},
+        {name:'Rouse',age:57},
+        {name:'Maria',age:74},
+        {name:'Sofia',age:14},
+        {name:'Renato',age:85},
+        {name:'Luis',age:10}
+    ]
+ );
+
+ //Usando mayor que -> gt (greater than)
+ db.clientes.find(
+     {age:{$gt:30}}
+ );
+
+ //Usando mayor que -> gt (greater than)
+ db.clientes.find(
+     {age:{$lt:50}}
+ );
+
+ //mayor que y menor que al mismo tiempo
+ db.clientes.find(
+     {age:{$gt:30,$lt:100}}
+ );
+
+ //Añadiendo objetos con propiedades dentro de otras propiedades
+
+ db.clientes.insert(
+     {
+         firstName:'Emilio',
+         address:{
+             city:'London',
+             number:132
+         }
+     }
+ );
+
+ //Buscando por propiedad dentro de la propiedad
+ db.clientes.find(
+     {'address.city':'London'}
+ );
+
+ //busqueda por expresiones regulares
+ db.clientes.find({name:{$regex:'ouse'}});
+
+ //Ordenando
+
+ //por apellido de forma ascendente
+ db.clientes.find().sort({name:1});
+
+  //por apellido de forma descendente
+ db.clientes.find().sort({name:-1});
+
+ //contar los elementos
+ db.clientes.count();
+
+ //Contar las personas que son mayores a 18
+  db.clientes.find({age:{$gt:18}}).count();
+
+  //limitar cantidad de busqueda
+  db.clientes.find().limit(3);
+
+  //mostrar 4 datos, ordenados por nombre de forma descendente
+  db.clientes.find().limit(3).sort({name:-1});
+
+  //bucles de javaScript en mongoDB
+
+  db.clientes.find().forEach((doc)=>print(doc.name));
