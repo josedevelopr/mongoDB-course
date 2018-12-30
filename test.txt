@@ -154,7 +154,7 @@ db.clientes.find(
      {age:{$gt:30}}
  );
 
- //Usando mayor que -> gt (greater than)
+ //Usando menor que -> gt (less than)
  db.clientes.find(
      {age:{$lt:50}}
  );
