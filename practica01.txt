@@ -1,5 +1,7 @@
 --Practicando MongoDB sintaxis
 
+//----------Consultas / Buscar documentos----------------------
+
 use mongo_exercise
 //Insertar los siguientes documentos en una colección llamada movies.
 db.movies.insert(    
@@ -93,3 +95,82 @@ db.movies.find({franchise:'The Hobbit'}).pretty();
 
     db.movies.find({year:{$gt:1999,$lt:2011}}).pretty();
 
+//----------Actualizar Documentos--------------------------------------------
+
+-- Agregar sinopsis a "The Hobbit: An Unexpected Journey" : "A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug."
+
+db.movies.update(
+    {title:"The Hobbit: An Unexpected Journey"},
+    {
+        $set:
+        {
+            sinopsis:"A reluctant hobbit, Bilbo Baggins, sets out to the Lonely Mountain with a spirited group of dwarves to reclaim their mountain home - and the gold within it - from the dragon Smaug."
+        }
+    }
+);
+
+-- Agregar sinopsis a "The Hobbit: The Desolation of Smaug" : "The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring."
+
+db.movies.update(
+    {title:"The Hobbit: The Desolation of Smaug"},
+    {
+        $set:
+        {
+            sinopsis:"The dwarves, along with Bilbo Baggins and Gandalf the Grey, continue their quest to reclaim Erebor, their homeland, from Smaug. Bilbo Baggins is in possession of a mysterious and magical ring."
+        }
+    }
+);
+
+-- Agregar una actor llamado "Samuel L. Jackson" a la película "Pulp Fiction"
+
+db.movies.update(
+    {title:"Pulp Fiction"},
+    {
+        $push:
+        {
+            actors:"Samuel L. Jackson"
+        }
+    }
+);
+
+//----------Busqueda por Texto / Text Search----------------------------------
+
+--Encontrar las películas que en la sinopsis contengan la palabra "Bilbo"
+
+db.movies.find({sinopsis:{$regex:"Bilbo"}}).pretty();
+
+--Encontrar las películas que en la sinopsis contengan la palabra "Gandalf"
+
+db.movies.find({sinopsis:{$regex:"Gandalf"}}).pretty();
+
+--Encontrar las películas que en la sinopsis contengan la palabra "Bilbo" y no la palabra "Gandalf"
+
+db.movies.find({sinopsis:{$regex:"Bilbo"}}).pretty();
+
+--Encontrar las películas que en la sinopsis contengan la palabra "dwarves" ó "hobbit"
+
+db.movies.find({sinopsis:{$regex:"dwarves"}}).pretty();
+
+--Encontrar las películas que en la sinopsis contengan la palabra "gold" y "dragon"
+
+db.movies.find(
+    {
+        $and:
+        [
+            {
+                sinopsis:{$regex:"dwarves"},
+                sinopsis:{$regex:"dragon"}
+            }
+        ]
+    }
+).pretty();
+
+//----------Eliminar Documentos----------------------------------------------
+
+-- Eliminar la película "Pee Wee Herman's Big Adventure"
+
+db.movies.remove({title:"Pee Wee Herman's Big Adventure"});
+
+-- Eliminar la película "Avatar"
+
+db.movies.remove({title:"Avatar"});

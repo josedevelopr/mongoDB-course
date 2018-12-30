@@ -49,7 +49,7 @@ db.clientes.find().pretty()
 //buscando por el ObjectId
 db.clientes.find({_id : ObjectId("5c27a036b90957ecbfb3c753")})
 
-//Actualizando (Se debe actualizar todos los datos)
+//Actualizando (Con este metodo se debe actualizar todos los datos)
 db.clientes.update(
  {_id: ObjectId("5c27a036b90957ecbfb3c753")},
  {
